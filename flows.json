@@ -1,0 +1,743 @@
+[
+    {
+        "id": "fcf04ef4f19762aa",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b829386fc83cc2b0",
+        "type": "tab",
+        "label": "Sense HAT",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b8c8aadbb4a9777b",
+        "type": "mqtt-broker",
+        "name": "HiveMQ",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "99a070996392cee4",
+        "type": "ui-page",
+        "name": "SenseHat Weather Dashboard",
+        "ui": "cf561e9869b50f4f",
+        "path": "/page1",
+        "icon": "home",
+        "layout": "grid",
+        "theme": "7c6a8ca8bfbbcc08",
+        "order": 1,
+        "className": "",
+        "visible": false,
+        "disabled": "false"
+    },
+    {
+        "id": "a4818865e16ea791",
+        "type": "ui-group",
+        "name": "Current Value",
+        "page": "99a070996392cee4",
+        "width": "4",
+        "height": "12",
+        "order": -1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "7c6a8ca8bfbbcc08",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094ce",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "cf561e9869b50f4f",
+        "type": "ui-base",
+        "name": "Weather Station Dashboard",
+        "path": "/dashboard",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "navigationStyle": "default"
+    },
+    {
+        "id": "67727876d3e49fab",
+        "type": "ui-group",
+        "name": "Time Chart",
+        "page": "99a070996392cee4",
+        "width": "8",
+        "height": "12",
+        "order": -1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "368d3a98c09ae3b4",
+        "type": "change",
+        "z": "b829386fc83cc2b0",
+        "name": "Capture Sensor Data",
+        "rules": [
+            {
+                "t": "set",
+                "p": "temperature",
+                "pt": "flow",
+                "to": "msg.payload.temperature",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "humidity",
+                "pt": "flow",
+                "to": "msg.payload.humidity",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "pressure",
+                "pt": "flow",
+                "to": "msg.payload.pressure",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "device",
+                "pt": "flow",
+                "to": "SenseHat",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 160,
+        "y": 240,
+        "wires": [
+            [
+                "ed08422720463c67"
+            ]
+        ]
+    },
+    {
+        "id": "1f7644d22f4d4cdf",
+        "type": "rpi-sensehat in",
+        "z": "b829386fc83cc2b0",
+        "name": "",
+        "motion": false,
+        "env": true,
+        "stick": false,
+        "x": 110,
+        "y": 120,
+        "wires": [
+            [
+                "eef03656d3c0afa4"
+            ]
+        ]
+    },
+    {
+        "id": "173009f4cea4c00d",
+        "type": "function",
+        "z": "b829386fc83cc2b0",
+        "name": "Add Timestamp",
+        "func": "var timestamp = new Date().toISOString();\nmsg.payload.timestamp = timestamp;\nvar device = flow.get(\"device\");\nvar location = flow.get(\"location\");\nvar temperature = flow.get(\"temperature\");\nvar humidity = flow.get(\"humidity\");\nvar pressure = flow.get(\"pressure\");\n\nmsg.payload.device = device;\nmsg.payload.location = location;\nmsg.payload.temperature = temperature;\nmsg.payload.humidity = humidity;\nmsg.payload.pressure = pressure;\n\ndelete msg.payload.range;\ndelete msg.payload.country;\ndelete msg.payload.eu;\ndelete msg.payload.timezone;\ndelete msg.payload.city;\ndelete msg.payload.region;\ndelete msg.payload.ll;\ndelete msg.payload.area;\ndelete msg.payload.metro;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 320,
+        "wires": [
+            [
+                "d42ed3fb38235157",
+                "71aecac73ff835c9",
+                "bf1b10dd973b8ab9",
+                "c0cecc7d5974e2fa",
+                "d4fd8f7398944efc",
+                "3c0ca563244d14da",
+                "0f51dbb3f168ce8d"
+            ]
+        ]
+    },
+    {
+        "id": "d42ed3fb38235157",
+        "type": "function",
+        "z": "b829386fc83cc2b0",
+        "name": "Insert to DB",
+        "func": "var sensor_data = msg.payload;\nconst close = \"');\"\n//msg.payload.sensor_readings = sensor_data;\n//msg.topic = \"INSERT INTO ws_sensordata (sensor_readings) VALUES (JSON_OBJECT('temperature', 'flow.temperature'));\"\nconst insertStatement = 'INSERT INTO ws_sensordata (sensor_readings) VALUES (\\'' + JSON.stringify(sensor_data) + close;\nmsg.sql = insertStatement;\nmsg.payload = insertStatement;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 280,
+        "wires": [
+            [
+                "e7c6c61b558b5819"
+            ]
+        ]
+    },
+    {
+        "id": "eef03656d3c0afa4",
+        "type": "delay",
+        "z": "b829386fc83cc2b0",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "25",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "30",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 140,
+        "y": 180,
+        "wires": [
+            [
+                "368d3a98c09ae3b4"
+            ]
+        ]
+    },
+    {
+        "id": "71aecac73ff835c9",
+        "type": "file",
+        "z": "b829386fc83cc2b0",
+        "name": "Write to File",
+        "filename": "/home/comitup/Documents/WeatherStation/SensorData.json",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 730,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "bf1b10dd973b8ab9",
+        "type": "debug",
+        "z": "b829386fc83cc2b0",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "c0cecc7d5974e2fa",
+        "type": "change",
+        "z": "b829386fc83cc2b0",
+        "name": "Temperature",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "msg.payload.temperature",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 730,
+        "y": 340,
+        "wires": [
+            [
+                "bc7e0e6650b880c4",
+                "c1fa24079571ae1b"
+            ]
+        ]
+    },
+    {
+        "id": "d4fd8f7398944efc",
+        "type": "change",
+        "z": "b829386fc83cc2b0",
+        "name": "Pressure",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "msg.payload.pressure",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 720,
+        "y": 420,
+        "wires": [
+            [
+                "74f16bdd89e98354",
+                "4b21a3ca6249f3ab"
+            ]
+        ]
+    },
+    {
+        "id": "3c0ca563244d14da",
+        "type": "change",
+        "z": "b829386fc83cc2b0",
+        "name": "Humidity",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "msg.payload.humidity",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 720,
+        "y": 500,
+        "wires": [
+            [
+                "91c0055963b0fc3c",
+                "f03239dca787f635"
+            ]
+        ]
+    },
+    {
+        "id": "bc7e0e6650b880c4",
+        "type": "ui-gauge",
+        "z": "b829386fc83cc2b0",
+        "name": "Gauge: Temperature",
+        "group": "a4818865e16ea791",
+        "order": 0,
+        "width": 3,
+        "height": "4",
+        "gtype": "gauge-34",
+        "gstyle": "needle",
+        "title": "Temperature",
+        "units": "units",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#0aebe7"
+            },
+            {
+                "from": "20",
+                "color": "#5cd65c"
+            },
+            {
+                "from": "25",
+                "color": "#ffc800"
+            },
+            {
+                "from": "30",
+                "color": "#ea5353"
+            }
+        ],
+        "min": 0,
+        "max": "50",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 960,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "74f16bdd89e98354",
+        "type": "ui-gauge",
+        "z": "b829386fc83cc2b0",
+        "name": "Gauge: Pressure",
+        "group": "a4818865e16ea791",
+        "order": 0,
+        "width": 3,
+        "height": "4",
+        "gtype": "gauge-34",
+        "gstyle": "needle",
+        "title": "Pressure",
+        "units": "units",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "950",
+                "color": "#ffc800"
+            },
+            {
+                "from": "1000",
+                "color": "#5cd65c"
+            },
+            {
+                "from": "1022",
+                "color": "#ffc800"
+            },
+            {
+                "from": "1030",
+                "color": "#ea5353"
+            }
+        ],
+        "min": "950",
+        "max": "1050",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 950,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "c1fa24079571ae1b",
+        "type": "ui-chart",
+        "z": "b829386fc83cc2b0",
+        "group": "67727876d3e49fab",
+        "name": "Chart: Temperature",
+        "label": "Temperature",
+        "order": 9007199254740991,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "time",
+        "yAxisProperty": "",
+        "ymin": "",
+        "ymax": "",
+        "action": "append",
+        "pointShape": "circle",
+        "pointRadius": 4,
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "width": "8",
+        "height": "4",
+        "className": "",
+        "x": 950,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4b21a3ca6249f3ab",
+        "type": "ui-chart",
+        "z": "b829386fc83cc2b0",
+        "group": "67727876d3e49fab",
+        "name": "Chart: Pressure",
+        "label": "Pressure",
+        "order": 9007199254740991,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "time",
+        "yAxisProperty": "",
+        "ymin": "",
+        "ymax": "",
+        "action": "append",
+        "pointShape": "circle",
+        "pointRadius": 4,
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "width": "8",
+        "height": "4",
+        "className": "",
+        "x": 940,
+        "y": 460,
+        "wires": [
+            [
+                "a9977977274b56ae"
+            ]
+        ]
+    },
+    {
+        "id": "91c0055963b0fc3c",
+        "type": "ui-chart",
+        "z": "b829386fc83cc2b0",
+        "group": "67727876d3e49fab",
+        "name": "Chart: Humidity",
+        "label": "Humidity",
+        "order": 9007199254740991,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "time",
+        "yAxisProperty": "",
+        "ymin": "",
+        "ymax": "",
+        "action": "append",
+        "pointShape": "circle",
+        "pointRadius": 4,
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "width": "8",
+        "height": "4",
+        "className": "",
+        "x": 940,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f03239dca787f635",
+        "type": "ui-gauge",
+        "z": "b829386fc83cc2b0",
+        "name": "Gauge: Humidity",
+        "group": "a4818865e16ea791",
+        "order": 0,
+        "width": 3,
+        "height": "4",
+        "gtype": "gauge-34",
+        "gstyle": "needle",
+        "title": "Humidity",
+        "units": "units",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c"
+            },
+            {
+                "from": "50",
+                "color": "#ffc800"
+            },
+            {
+                "from": "70",
+                "color": "#ea5353"
+            }
+        ],
+        "min": 0,
+        "max": "100",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 950,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "0f51dbb3f168ce8d",
+        "type": "mqtt out",
+        "z": "b829386fc83cc2b0",
+        "name": "MQTT: All Sensor Data",
+        "topic": "/unitec/iot/kkweather/allsensors",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "b8c8aadbb4a9777b",
+        "x": 760,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "e7c6c61b558b5819",
+        "type": "mysql-r2",
+        "z": "b829386fc83cc2b0",
+        "name": "MariaDB: WeatherStation (local)",
+        "host": "localhost",
+        "database": "db_weatherstation",
+        "username": "weatherman",
+        "password": "sunnysideup",
+        "sql": "SQL/msg.sql",
+        "port": "3306",
+        "pooling": false,
+        "waitForConnections": true,
+        "connectionLimit": "10",
+        "queueTimeout": "10000",
+        "x": 990,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ed08422720463c67",
+        "type": "public-ip-address",
+        "z": "b829386fc83cc2b0",
+        "name": "Get Public IP",
+        "x": 430,
+        "y": 140,
+        "wires": [
+            [
+                "da8d2f667082c7cc"
+            ]
+        ]
+    },
+    {
+        "id": "23606ab61617235d",
+        "type": "change",
+        "z": "b829386fc83cc2b0",
+        "name": "Add City to Payload",
+        "rules": [
+            {
+                "t": "set",
+                "p": "location",
+                "pt": "flow",
+                "to": "msg.payload.city",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 430,
+        "y": 260,
+        "wires": [
+            [
+                "173009f4cea4c00d"
+            ]
+        ]
+    },
+    {
+        "id": "a9977977274b56ae",
+        "type": "rpi-sensehat out",
+        "z": "b829386fc83cc2b0",
+        "name": "",
+        "x": 1150,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "da8d2f667082c7cc",
+        "type": "ip-location-lite",
+        "z": "b829386fc83cc2b0",
+        "name": "Get City",
+        "inputField": "payload",
+        "outputField": "payload",
+        "x": 440,
+        "y": 200,
+        "wires": [
+            [
+                "23606ab61617235d"
+            ]
+        ]
+    }
+]
